@@ -1,5 +1,7 @@
 # server telegram bot example
 
+# Test async bot on own laptop
+
 ## prepare repo
 
 clone echo_bot:
@@ -74,3 +76,41 @@ run bot using gunicorn, bot means echo_[bot.py](http://bot.py) in the current di
 gunicorn echo_bot:app -b 127.0.0.1:$PORT -k aiohttp.Gunicor
 nWebWorker
 ```
+
+# Submit bot to the server (free yet)
+
+## Render
+
+register on [render.com](http://render.com)
+
+in dashboard: New → Web Service
+
+connect github repo
+
+edit **Configure** (suitable for my case):
+
+- region: frankfurt (could be any)
+- root: empty
+- build command: `pip install -r requirements.txt`
+- start command: `gunicorn echo_bot:app -b 0.0.0.0:8443 -k aiohttp.GunicornWebWorker`
+- free plan
+
+add env variable  `PYTHON_VERSION = 3.11.4`
+
+create service → it does not work yet.
+
+We should add `.env` file in Enviroment → Secret Files 
+
+like [here](https://www.notion.so/server-telegram-bot-example-6f72cd380e524707b4ade3bfe2d6ebfc?pvs=21) (be careful with ports):
+
+`BASE_WEBHOOK_URL` will be changed to `https://echo-bot-example.onrender.com` for example
+
+## Telegram hook
+
+create new telegram api hook like [here](https://www.notion.so/server-telegram-bot-example-6f72cd380e524707b4ade3bfe2d6ebfc?pvs=21).
+
+it’s better to use different bots for test and release, so you need new `TELEGRAM_TOKEN` (and edit `.env` file in Render)
+
+If you use the same bot for test and release, than you should every time set new webhook
+
+## Actually, that’s all🫡
